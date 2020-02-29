@@ -7,8 +7,10 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
 
 有些地方可能想得不是很全面，大家可以去[【公众号】](#公众号)获取或者加我[【微信】](#微信)提意见。(别忘记给这个项目 **Star** 哦)。
 
-![3yQUXt.png](https://s2.ax1x.com/2020/02/29/3yQUXt.png)
+# Java知识图谱
+![Java知识图谱](https://s2.ax1x.com/2020/02/29/3yQUXt.png)
 
+# 目录
 - 数据存储
    - MySQL
      - [聊一聊关于MySQL的count(*)](https://mp.weixin.qq.com/s/tBKqfxwBYjnUXSflWpeHJg) 
@@ -21,10 +23,9 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
 # 联系我
 **微信号：awan_note**
 
-![3ykR3T.png](https://s2.ax1x.com/2020/02/29/3ykR3T.png)
+![微信号](https://s2.ax1x.com/2020/02/29/3ykR3T.png)
 
 # <a name="公众号"></a>
 **公众号：阿丸笔记**
 
-
-![3yiZr9.jpg](https://s2.ax1x.com/2020/02/29/3yiZr9.jpg)
+![公众号](https://s2.ax1x.com/2020/02/29/3yiZr9.jpg)
