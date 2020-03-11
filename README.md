@@ -20,14 +20,21 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
      - [两文说透MySQL里的各种锁（上篇）](https://mp.weixin.qq.com/s/st8MleVpzTnPoX5nRQv3CQ)
      - [两文说透MySQL里的各种锁（下篇）](https://mp.weixin.qq.com/s/DVxiE9UgjtworsgoNKDT3Q)
      - [MySQL数据库无完整备份删库，除了跑路还能怎么办？](https://mp.weixin.qq.com/s/CSXdyD9uPbxwULvyTvHwsw)
+    - HBase
+      - [[从零单排HBase 01]从一无所知到5分钟快速了解HBase](https://mp.weixin.qq.com/s/qPu4fQD4O09M_vM-4J1gKA)
+      - [[从零单排HBase 02]全面认识HBase架构](https://mp.weixin.qq.com/s/taJFffcJeD7_N6TQeREbBQ)
+      - [[从零单排HBase 03]深入HBase读写](https://mp.weixin.qq.com/s/WxuvlFx6gYRf7VMBPXjVoQ)
+      - [[从零单排HBase 04]HBase高性能查询揭秘](https://mp.weixin.qq.com/s/_VTkgfW-rCqs-2-QlBydJg)
+      - [[从零单排HBase 05]核心特性region split](https://mp.weixin.qq.com/s/UHo33iffs_RXzUcFNe9q8Q)
+      - [[从零单排HBase 06]你必须知道的HBase最佳实践](https://www.toutiao.com/i6802913831296172556/)
 
 # <a name="微信"></a> 
 # 联系我
 **微信号：awan_note**
 
-![微信号](https://s2.ax1x.com/2020/02/29/3ykR3T.png)
+![微信号](https://oscimg.oschina.net/oscnet/up-991da1449a8c516bdc077a4f194b5a33b87.png)
 
 # <a name="公众号"></a>
 **公众号：阿丸笔记**
 
-![公众号](https://s2.ax1x.com/2020/02/29/3yiZr9.jpg)
+![公众号](https://img-blog.csdnimg.cn/20200216153626581.jpg)
