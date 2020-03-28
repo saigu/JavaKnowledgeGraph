@@ -20,6 +20,9 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
      - [两文说透MySQL里的各种锁（上篇）](https://mp.weixin.qq.com/s/st8MleVpzTnPoX5nRQv3CQ)
      - [两文说透MySQL里的各种锁（下篇）](https://mp.weixin.qq.com/s/DVxiE9UgjtworsgoNKDT3Q)
      - [MySQL数据库无完整备份删库，除了跑路还能怎么办？](https://mp.weixin.qq.com/s/CSXdyD9uPbxwULvyTvHwsw)
+     - [MySQL事务隔离性，从基本概念深入到实现](https://mp.weixin.qq.com/s/BeKkL2VZTDJsE3JARrht2A)
+      - 学习书目：《高性能MySQL》、《MySQL技术内幕 InnoDB存储引擎》、丁奇《MySQL实战45讲》
+
     - HBase
       - [[从零单排HBase 01]从一无所知到5分钟快速了解HBase](https://mp.weixin.qq.com/s/qPu4fQD4O09M_vM-4J1gKA)
       - [[从零单排HBase 02]全面认识HBase架构](https://mp.weixin.qq.com/s/taJFffcJeD7_N6TQeREbBQ)
@@ -27,6 +30,12 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排HBase 04]HBase高性能查询揭秘](https://mp.weixin.qq.com/s/_VTkgfW-rCqs-2-QlBydJg)
       - [[从零单排HBase 05]核心特性region split](https://mp.weixin.qq.com/s/UHo33iffs_RXzUcFNe9q8Q)
       - [[从零单排HBase 06]你必须知道的HBase最佳实践](https://www.toutiao.com/i6802913831296172556/)
+      - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
+    - 工作总结
+      - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
+      - [关于校招面试要怎么准备，这里有一些过来人的建议](https://mp.weixin.qq.com/s/JF936aSUR40dycHjujDWWQ)
+      - [数据库中间件漫谈——看看云时代，它会走向何方](https://mp.weixin.qq.com/s/zvGQC5nct5CPzER6eyufNw)
+
 
 # <a name="微信"></a> 
 # 联系我
