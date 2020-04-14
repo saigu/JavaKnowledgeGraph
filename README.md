@@ -21,6 +21,7 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
      - [两文说透MySQL里的各种锁（下篇）](https://mp.weixin.qq.com/s/DVxiE9UgjtworsgoNKDT3Q)
      - [MySQL数据库无完整备份删库，除了跑路还能怎么办？](https://mp.weixin.qq.com/s/CSXdyD9uPbxwULvyTvHwsw)
      - [MySQL事务隔离性，从基本概念深入到实现](https://mp.weixin.qq.com/s/BeKkL2VZTDJsE3JARrht2A)
+     - [MySQL事务原子性、一致性、持久性的实现](https://mp.weixin.qq.com/s/NeGQDj-DjMJJMEoqfJzEpg)
       - 学习书目：《高性能MySQL》、《MySQL技术内幕 InnoDB存储引擎》、丁奇《MySQL实战45讲》
 
     - HBase
@@ -35,6 +36,7 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
       - [关于校招面试要怎么准备，这里有一些过来人的建议](https://mp.weixin.qq.com/s/JF936aSUR40dycHjujDWWQ)
       - [数据库中间件漫谈——看看云时代，它会走向何方](https://mp.weixin.qq.com/s/zvGQC5nct5CPzER6eyufNw)
+      - [谈谈程序员的非技术思维](https://mp.weixin.qq.com/s/Ev9csm0UTeKgQbfrEVqr6g)
 
 
 # <a name="微信"></a> 
