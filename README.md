@@ -35,11 +35,11 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排HBase 08]HBase可用性分析与高可用实践](https://mp.weixin.qq.com/s/USzrA1KrgX4mBbGrct3eAA)
 
       - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
-    - 工作总结
-      - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
-      - [关于校招面试要怎么准备，这里有一些过来人的建议](https://mp.weixin.qq.com/s/JF936aSUR40dycHjujDWWQ)
-      - [数据库中间件漫谈——看看云时代，它会走向何方](https://mp.weixin.qq.com/s/zvGQC5nct5CPzER6eyufNw)
-      - [谈谈程序员的非技术思维](https://mp.weixin.qq.com/s/Ev9csm0UTeKgQbfrEVqr6g)
+- 工作总结
+  - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
+  - [关于校招面试要怎么准备，这里有一些过来人的建议](https://mp.weixin.qq.com/s/JF936aSUR40dycHjujDWWQ)
+  - [数据库中间件漫谈——看看云时代，它会走向何方](https://mp.weixin.qq.com/s/zvGQC5nct5CPzER6eyufNw)
+  - [谈谈程序员的非技术思维](https://mp.weixin.qq.com/s/Ev9csm0UTeKgQbfrEVqr6g)
 
 
 # <a name="微信"></a> 
