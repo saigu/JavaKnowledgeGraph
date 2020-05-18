@@ -33,6 +33,11 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排HBase 06]你必须知道的HBase最佳实践](https://mp.weixin.qq.com/s/q7qN_Zwax-8qBTVRhTXkrg)
       - [[从零单排HBase 07]如何正确管理HBase的连接](https://mp.weixin.qq.com/s/kEklr8eSpofYNb7-g4C0nA)
       - [[从零单排HBase 08]HBase可用性分析与高可用实践](https://mp.weixin.qq.com/s/USzrA1KrgX4mBbGrct3eAA)
+      - [[从零单排HBase 09]HBase的那些数据结构和算法](https://mp.weixin.qq.com/s/st-FbLbr602oq_AV-paLGw)
+      - [[从零单排HBase 10]HBase集群多租户实践](https://mp.weixin.qq.com/s/Cb9ljvovjpepZmT3wmkEtQ)
+      - [[从零单排HBase 11]HBase二级索引解决方案](https://mp.weixin.qq.com/s/tF2OmKByzTn_D7gbBtkjJA)
+      - [[从零单排HBase 12]HBase二级索引Phoenix使用与最佳实践](https://mp.weixin.qq.com/s/p50yj_YDyiNfbcVSWU-B7g)
+
 
       - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
 - 工作总结
