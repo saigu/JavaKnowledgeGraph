@@ -57,15 +57,23 @@ public class CanalStarter {
 
     /**
      * 启动方法
+     * note:
+     * 1.启动CanalMQProducer
+     * 2.启动CanalController
+     * 3.注册shutdownHook
+     * 4.启动canalMQStarter
+     * 5.监听canalAdmin
      *
      * @throws Throwable
      */
     public synchronized void start() throws Throwable {
         String serverMode = CanalController.getProperty(properties, CanalConstants.CANAL_SERVER_MODE);
+        //note 1.如果canal.serverMode不是tcp，SPI加载CanalMQProducer,并且启动CanalMQProducer
+        //（回头可以深入研究下ExtensionLoader类的相关实现）
         if (!"tcp".equalsIgnoreCase(serverMode)) {
             ExtensionLoader<CanalMQProducer> loader = ExtensionLoader.getExtensionLoader(CanalMQProducer.class);
             canalMQProducer = loader
-                .getExtension(serverMode.toLowerCase(), CONNECTOR_SPI_DIR, CONNECTOR_STANDBY_SPI_DIR);
+                    .getExtension(serverMode.toLowerCase(), CONNECTOR_SPI_DIR, CONNECTOR_STANDBY_SPI_DIR);
             if (canalMQProducer != null) {
                 ClassLoader cl = Thread.currentThread().getContextClassLoader();
                 Thread.currentThread().setContextClassLoader(canalMQProducer.getClass().getClassLoader());
@@ -73,7 +81,7 @@ public class CanalStarter {
                 Thread.currentThread().setContextClassLoader(cl);
             }
         }
-
+        //note 2.如果启动了canalMQProducer,就不使用canalWithNetty(这里的netty是用在哪里的？)
         if (canalMQProducer != null) {
             MQProperties mqProperties = canalMQProducer.getMqProperties();
             // disable netty
@@ -86,14 +94,17 @@ public class CanalStarter {
 
         logger.info("## start the canal server.");
         controller = new CanalController(properties);
+        //note 3.启动canalController
         controller.start();
         logger.info("## the canal server is running now ......");
+        //note 4.注册了一个shutdownHook,系统退出时执行相关逻辑
         shutdownThread = new Thread() {
 
             public void run() {
                 try {
                     logger.info("## stop the canal server");
                     controller.stop();
+                    //note 主线程退出
                     CanalLauncher.runningLatch.countDown();
                 } catch (Throwable e) {
                     logger.warn("##something goes wrong when stopping canal Server:", e);
@@ -105,6 +116,7 @@ public class CanalStarter {
         };
         Runtime.getRuntime().addShutdownHook(shutdownThread);
 
+        //note 5.启动canalMQStarter（关注下mqProducer和mqStarter的关系？）
         if (canalMQProducer != null) {
             canalMQStarter = new CanalMQStarter(canalMQProducer);
             String destinations = CanalController.getProperty(properties, CanalConstants.CANAL_DESTINATIONS);
@@ -114,6 +126,9 @@ public class CanalStarter {
 
         // start canalAdmin
         String port = CanalController.getProperty(properties, CanalConstants.CANAL_ADMIN_PORT);
+
+        //note 6.根据填写的canalAdmin的ip和port,启动canalAdmin,用netty做服务器
+        //（netty原理、使用可以深入展开下）
         if (canalAdmin == null && StringUtils.isNotEmpty(port)) {
             String user = CanalController.getProperty(properties, CanalConstants.CANAL_ADMIN_USER);
             String passwd = CanalController.getProperty(properties, CanalConstants.CANAL_ADMIN_PASSWD);
@@ -124,10 +139,10 @@ public class CanalStarter {
             String ip = CanalController.getProperty(properties, CanalConstants.CANAL_IP);
 
             logger.debug("canal admin port:{}, canal admin user:{}, canal admin password: {}, canal ip:{}",
-                port,
-                user,
-                passwd,
-                ip);
+                    port,
+                    user,
+                    passwd,
+                    ip);
 
             CanalAdminWithNetty canalAdminWithNetty = CanalAdminWithNetty.instance();
             canalAdminWithNetty.setCanalAdmin(canalAdmin);

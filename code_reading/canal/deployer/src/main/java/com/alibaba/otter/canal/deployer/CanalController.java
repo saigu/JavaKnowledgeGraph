@@ -147,6 +147,8 @@ public class CanalController {
 
         final ServerRunningData serverData = new ServerRunningData(registerIp + ":" + port);
         ServerRunningMonitors.setServerData(serverData);
+        //note: MigrateMap.makeComputingMap的使用
+        //当map.get为null时，会调用apply方法,类似guava cache的load操作
         ServerRunningMonitors.setRunningMonitors(MigrateMap.makeComputingMap(new Function<String, ServerRunningMonitor>() {
 
             public ServerRunningMonitor apply(final String destination) {
@@ -486,6 +488,14 @@ public class CanalController {
         return StringUtils.trim(value);
     }
 
+    /**
+     * note:
+     * 1.在zk的/otter/canal/cluster目录下根据ip:port创建server的临时节点，注册zk监听器
+     * 2.优先启动embededCanalServer
+     * 3.启动instance的监控 ServerRunningMonitor
+     * 4.启动canServer (canalServerWithNetty)
+     * @throws Throwable
+     */
     public void start() throws Throwable {
         logger.info("## start the canal server[{}({}):{}]", ip, registerIp, port);
         // 创建整个canal的工作节点

@@ -133,6 +133,7 @@ public class CanalLauncher {
 
             canalStater.start();
             runningLatch.await();
+            //note 这样处理似乎和CanalStarter里面的shutdownhook的功能类似
             executor.shutdownNow();
         } catch (Throwable e) {
             logger.error("## Something goes wrong when starting up the canal Server:", e);
