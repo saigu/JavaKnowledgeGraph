@@ -155,7 +155,15 @@ public class CanalController {
                 ServerRunningMonitor runningMonitor = new ServerRunningMonitor(serverData);
                 runningMonitor.setDestination(destination);
                 runningMonitor.setListener(new ServerRunningListener() {
-
+                    /**
+                     * note
+                     * 1.内部调用了embededCanalServer的start(destination)方法。
+                     * 这里很关键，说明每个destination对应的CanalInstance是通过embededCanalServer的start方法启动的，
+                     * 这样我们就能理解，为什么之前构造器中会把instanceGenerator设置到embededCanalServer中了。
+                     * embededCanalServer负责调用instanceGenerator生成CanalInstance实例，并负责其启动。
+                     *
+                     * 2.如果投递mq，还会直接调用canalMQStarter来启动一个destination
+                     */
                     public void processActiveEnter() {
                         try {
                             MDC.put(CanalConstants.MDC_DESTINATION, String.valueOf(destination));
@@ -168,6 +176,11 @@ public class CanalController {
                         }
                     }
 
+                    /**
+                     * note
+                     * 1.与开始顺序相反，如果有mqStarter，先停止mqStarter的destination
+                     * 2.停止embedeCanalServer的destination
+                     */
                     public void processActiveExit() {
                         try {
                             MDC.put(CanalConstants.MDC_DESTINATION, String.valueOf(destination));
@@ -180,6 +193,12 @@ public class CanalController {
                         }
                     }
 
+                    /**
+                     * note
+                     * 在Canalinstance启动之前，destination注册到ZK上,创建节点
+                     * 路径为：/otter/canal/destinations/{0}/cluster/{1}，其0会被destination替换，1会被ip:port替换。
+                     * 此方法会在processActiveEnter()之前被调用
+                     */
                     public void processStart() {
                         try {
                             if (zkclientx != null) {
@@ -206,7 +225,12 @@ public class CanalController {
                             MDC.remove(CanalConstants.MDC_DESTINATION);
                         }
                     }
-
+                    /**
+                     * note
+                     * 在Canalinstance停止前，把ZK上节点删除掉
+                     * 路径为：/otter/canal/destinations/{0}/cluster/{1}，其0会被destination替换，1会被ip:port替换。
+                     * 此方法会在processActiveExit()之前被调用
+                     */
                     public void processStop() {
                         try {
                             MDC.put(CanalConstants.MDC_DESTINATION, String.valueOf(destination));
@@ -378,17 +402,19 @@ public class CanalController {
         instanceGenerator = new CanalInstanceGenerator() {
 
             public CanalInstance generate(String destination) {
+                //note 1.根据destination创建config
                 InstanceConfig config = instanceConfigs.get(destination);
                 if (config == null) {
                     throw new CanalServerException("can't find destination:" + destination);
                 }
-
+                //note 2.如果canal.instance.global.mode = manager，就使用PlainCanalInstanceGenerator
                 if (config.getMode().isManager()) {
                     PlainCanalInstanceGenerator instanceGenerator = new PlainCanalInstanceGenerator(properties);
                     instanceGenerator.setCanalConfigClient(managerClients.get(config.getManagerAddress()));
                     instanceGenerator.setSpringXml(config.getSpringXml());
                     return instanceGenerator.generate(destination);
                 } else if (config.getMode().isSpring()) {
+                    //note 3.如果canal.instance.global.mode = spring，就使用SpringCanalInstanceGenerator
                     SpringCanalInstanceGenerator instanceGenerator = new SpringCanalInstanceGenerator();
                     instanceGenerator.setSpringXml(config.getSpringXml());
                     return instanceGenerator.generate(destination);
@@ -491,8 +517,8 @@ public class CanalController {
     /**
      * note:
      * 1.在zk的/otter/canal/cluster目录下根据ip:port创建server的临时节点，注册zk监听器
-     * 2.优先启动embededCanalServer
-     * 3.启动instance的监控 ServerRunningMonitor
+     * 2.优先启动embededCanalServer（会启动对应的监控）
+     * 3.根据配置的instance的destination，逐个启动instance及其监控 ServerRunningMonitor
      * 4.启动canServer (canalServerWithNetty)
      * @throws Throwable
      */
