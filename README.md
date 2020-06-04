@@ -37,9 +37,14 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排HBase 10]HBase集群多租户实践](https://mp.weixin.qq.com/s/Cb9ljvovjpepZmT3wmkEtQ)
       - [[从零单排HBase 11]HBase二级索引解决方案](https://mp.weixin.qq.com/s/tF2OmKByzTn_D7gbBtkjJA)
       - [[从零单排HBase 12]HBase二级索引Phoenix使用与最佳实践](https://mp.weixin.qq.com/s/p50yj_YDyiNfbcVSWU-B7g)
-
+      - [[从零单排HBase 13]使用phoenix踩的坑与设计思考](https://mp.weixin.qq.com/s/gMDi2XA1CroCb9oTkUdbWg)
 
       - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
+
+- 项目实战
+    - 数据订阅与实时同步
+      - [实时数据订阅与分发系统概述](https://mp.weixin.qq.com/s/vJKGfBeKtKJ7pH6S7b4Klw)
+      - [[从零单排canal 01] canal 10分钟入门（基于1.1.4版本）](https://mp.weixin.qq.com/s/caEi8hrpuFFBDJyj2dXmow)
 - 工作总结
   - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
   - [关于校招面试要怎么准备，这里有一些过来人的建议](https://mp.weixin.qq.com/s/JF936aSUR40dycHjujDWWQ)
