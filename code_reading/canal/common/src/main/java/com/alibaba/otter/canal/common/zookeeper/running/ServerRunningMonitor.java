@@ -50,7 +50,13 @@ public class ServerRunningMonitor extends AbstractCanalLifeCycle {
     public ServerRunningMonitor(){
         // 创建父节点
         dataListener = new IZkDataListener() {
-
+            /**
+             * note：
+             * 当注册节点发生变化时，会自动回调这个方法。
+             * 我们回想一下使用过程中，什么时候可能 改变节点当状态呢？
+             * 大概是在控制台中，对canal-server中正在运行的 instance做"停止"操作时，改变了isActive。
+             * 可以 触发 HA。
+             */
             public void handleDataChange(String dataPath, Object data) throws Exception {
                 MDC.put("destination", destination);
                 ServerRunningData runningData = JsonUtils.unmarshalFromByte((byte[]) data, ServerRunningData.class);
@@ -65,6 +71,10 @@ public class ServerRunningMonitor extends AbstractCanalLifeCycle {
                 activeData = (ServerRunningData) runningData;
             }
 
+            /**
+             * note:
+             * 如果其他canal instance出现异常，临时节点数据被删除时，会自动回调这个方法，此时当前canal instance要顶上去
+             */
             public void handleDataDeleted(String dataPath) throws Exception {
                 MDC.put("destination", destination);
                 mutex.set(false);
@@ -93,14 +103,33 @@ public class ServerRunningMonitor extends AbstractCanalLifeCycle {
     public synchronized void start() {
         super.start();
         try {
+            /**
+             * note:
+             * 内部会调用ServerRunningListener的processStart()方法
+             */
             processStart();
             if (zkClient != null) {
                 // 如果需要尽可能释放instance资源，不需要监听running节点，不然即使stop了这台机器，另一台机器立马会start
+                /**
+                 * note:
+                 * 构建临时节点的路径：/otter/canal/destinations/{0}/running，其中占位符{0}会被destination替换。
+                 * 在集群模式下，可能会有多个canal server共同处理同一个destination，
+                 * 在某一时刻，只能由一个canal server进行处理，处理这个destination的canal server进入running状态，其他canal server进入standby状态。
+                 */
                 String path = ZookeeperPathUtils.getDestinationServerRunning(destination);
+                /**
+                 * note:
+                 * 对destination对应的running节点进行监听，一旦发生了变化，则说明可能其他处理相同destination的canal server可能出现了异常，
+                 * 此时需要尝试自己进入running状态。
+                 */
                 zkClient.subscribeDataChanges(path, dataListener);
 
                 initRunning();
             } else {
+                /**
+                 * note
+                 * 内部直接调用ServerRunningListener的processActiveEnter()方法
+                 */
                 processActiveEnter();// 没有zk，直接启动
             }
         } catch (Exception e) {
@@ -140,17 +169,34 @@ public class ServerRunningMonitor extends AbstractCanalLifeCycle {
             return;
         }
 
+        //note： 还是一样构建一个临时节点的路径：/otter/canal/destinations/{0}/running
         String path = ZookeeperPathUtils.getDestinationServerRunning(destination);
         // 序列化
         byte[] bytes = JsonUtils.marshalToByte(serverData);
         try {
             mutex.set(false);
+            /**
+             * note:
+             * 尝试创建临时节点。如果节点已经存在，说明是其他的canal server已经启动了这个canal instance。
+             * 此时会抛出ZkNodeExistsException，进入catch代码块。
+             */
             zkClient.create(path, bytes, CreateMode.EPHEMERAL);
+            /**
+             * note:
+             * 如果创建成功，就开始触发启动事件
+             */
             activeData = serverData;
             processActiveEnter();// 触发一下事件
             mutex.set(true);
             release = false;
         } catch (ZkNodeExistsException e) {
+            /**
+             * note:
+             * 如果捕获异常，表示创建失败。
+             * 就根据临时节点路径查一下是哪个canal-sever创建了。
+             * 如果没有相关信息，马上重新尝试一下。
+             * 如果确实存在，就把相关信息保存下来
+             */
             bytes = zkClient.readData(path, true);
             if (bytes == null) {// 如果不存在节点，立即尝试一次
                 initRunning();
@@ -158,6 +204,10 @@ public class ServerRunningMonitor extends AbstractCanalLifeCycle {
                 activeData = JsonUtils.unmarshalFromByte(bytes, ServerRunningData.class);
             }
         } catch (ZkNoNodeException e) {
+            /**
+             * note:
+             * 如果是父节点不存在，那么就尝试创建一下父节点，然后再初始化。
+             */
             zkClient.createPersistent(ZookeeperPathUtils.getDestinationPath(destination), true); // 尝试创建父节点
             initRunning();
         }
