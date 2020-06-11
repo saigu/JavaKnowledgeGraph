@@ -28,7 +28,10 @@ import com.alibaba.otter.canal.server.netty.handler.SessionHandler;
  * @version 1.0.0
  */
 public class CanalServerWithNetty extends AbstractCanalLifeCycle implements CanalServer {
-
+    /**
+     * note:
+     * 监听的所有客户端请求都会委派给CanalServerWithEmbedded处理
+     */
     private CanalServerWithEmbedded embeddedServer;      // 嵌入式server
     private String                  ip;
     private int                     port;
@@ -39,6 +42,10 @@ public class CanalServerWithNetty extends AbstractCanalLifeCycle implements Cana
                                                           // close sockets
                                                           // explicitly.
 
+    /**
+     * note：
+     * 使用 private构造器 + 静态内部类 来实现一个单例模式
+     */
     private static class SingletonHolder {
 
         private static final CanalServerWithNetty CANAL_SERVER_WITH_NETTY = new CanalServerWithNetty();
@@ -54,12 +61,28 @@ public class CanalServerWithNetty extends AbstractCanalLifeCycle implements Cana
     }
 
     public void start() {
+        /**
+         * note:
+         * 1.是否已启动，已经启动就不重复启动
+         */
         super.start();
 
+        /**
+         * note:
+         * 2.优先启动内嵌canalServer，因为serverWithNetty依赖于内嵌canalServer
+         */
         if (!embeddedServer.isStart()) {
             embeddedServer.start();
         }
 
+        /**
+         * note:
+         * 3.创建bootstrap实例。
+         * 参数NioServerSocketChannelFactory也是Netty的API，接受2个线程池参数
+         * 第一个线程池是Accept线程池，第二个线程池是woker线程池，
+         * Accept线程池接收到client连接请求后，会将代表client的对象转发给worker线程池处理。
+         * 这里属于netty的知识，不熟悉的可以暂时不必深究，简单认为netty使用线程来处理客户端的高并发请求即可。
+         */
         this.bootstrap = new ServerBootstrap(new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
             Executors.newCachedThreadPool()));
         /*
@@ -68,24 +91,34 @@ public class CanalServerWithNetty extends AbstractCanalLifeCycle implements Cana
          * e.g. On Linux: net.ipv4.tcp_keepalive_time = 300
          * net.ipv4.tcp_keepalive_probes = 2 net.ipv4.tcp_keepalive_intvl = 30
          */
-        bootstrap.setOption("child.keepAlive", true);
+        bootstrap.setOption("child.keepAlive", true);//note: tcp keepAlive
         /*
          * optional parameter.
          */
-        bootstrap.setOption("child.tcpNoDelay", true);
+        bootstrap.setOption("child.tcpNoDelay", true);//note:禁用了TCP中的Nagle算法，避免延迟
 
         // 构造对应的pipeline
+        /**
+         * note:
+         * 4.构造pipeline
+         * pipeline实际上就是netty对客户端请求的处理器链，
+         * 可以类比JAVA EE编程中Filter的责任链模式，上一个filter处理完成之后交给下一个filter处理，
+         * 只不过在netty中，不再是filter，而是ChannelHandler。
+         */
         bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 
             public ChannelPipeline getPipeline() throws Exception {
                 ChannelPipeline pipelines = Channels.pipeline();
+                //note:主要处理编码、解码，解析网络传入的二进制流。
                 pipelines.addLast(FixedHeaderFrameDecoder.class.getName(), new FixedHeaderFrameDecoder());
                 // support to maintain child socket channel.
                 pipelines.addLast(HandshakeInitializationHandler.class.getName(),
                     new HandshakeInitializationHandler(childGroups));
+                //note:client身份验证
                 pipelines.addLast(ClientAuthenticationHandler.class.getName(),
                     new ClientAuthenticationHandler(embeddedServer));
 
+                //note: 真正处理客户端请求，是核心逻辑！
                 SessionHandler sessionHandler = new SessionHandler(embeddedServer);
                 pipelines.addLast(SessionHandler.class.getName(), sessionHandler);
                 return pipelines;
@@ -93,6 +126,11 @@ public class CanalServerWithNetty extends AbstractCanalLifeCycle implements Cana
         });
 
         // 启动
+        /**
+         * note:
+         * 5.启动netty服务器
+         * 真正启动netty服务器，监听这个port端口，然后客户端对 这个端口的请求可以被接收到
+         */
         if (StringUtils.isNotEmpty(ip)) {
             this.serverChannel = bootstrap.bind(new InetSocketAddress(this.ip, this.port));
         } else {

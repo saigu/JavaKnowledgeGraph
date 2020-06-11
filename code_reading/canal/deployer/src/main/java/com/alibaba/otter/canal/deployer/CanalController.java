@@ -519,7 +519,7 @@ public class CanalController {
      * 1.在zk的/otter/canal/cluster目录下根据ip:port创建server的临时节点，注册zk监听器
      * 2.优先启动embededCanalServer（会启动对应的监控）
      * 3.根据配置的instance的destination，逐个启动instance及其监控 ServerRunningMonitor
-     * 4.启动canServer (canalServerWithNetty)
+     * 4.如果cannalServer不为空，启动canServer (canalServerWithNetty)
      * @throws Throwable
      */
     public void start() throws Throwable {

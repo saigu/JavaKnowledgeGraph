@@ -116,7 +116,7 @@ public class CanalStarter {
         };
         Runtime.getRuntime().addShutdownHook(shutdownThread);
 
-        //note 5.启动canalMQStarter（关注下mqProducer和mqStarter的关系？）
+        //note 5.启动canalMQStarter，
         if (canalMQProducer != null) {
             canalMQStarter = new CanalMQStarter(canalMQProducer);
             String destinations = CanalController.getProperty(properties, CanalConstants.CANAL_DESTINATIONS);

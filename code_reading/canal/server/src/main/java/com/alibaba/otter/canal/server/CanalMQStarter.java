@@ -29,6 +29,9 @@ public class CanalMQStarter {
 
     private volatile boolean             running        = false;
 
+    /**
+     * 对每个instance起一个worker线程
+     */
     private ExecutorService              executorService;
 
     private CanalMQProducer              canalMQProducer;
@@ -56,9 +59,13 @@ public class CanalMQStarter {
                 System.setProperty("canal.instance.filter.transaction.entry", "true");
             }
 
+            /**
+             * note：
+             * 1.获取CanalServerWithEmbedded的单例对象
+             */
             canalServer = CanalServerWithEmbedded.instance();
 
-            // 对应每个instance启动一个worker线程
+            // 2.对应每个instance启动一个worker线程
             executorService = Executors.newCachedThreadPool();
             logger.info("## start the MQ workers.");
 
@@ -73,6 +80,10 @@ public class CanalMQStarter {
             running = true;
             logger.info("## the MQ workers is running now ......");
 
+            /**
+             * note:
+             * 3.注册ShutdownHook，退出时关闭线程池和mqProducer
+             */
             shutdownThread = new Thread() {
 
                 public void run() {
@@ -141,9 +152,17 @@ public class CanalMQStarter {
 
         logger.info("## start the MQ producer: {}.", destination);
         MDC.put("destination", destination);
+        /**
+         * note：
+         * 1.给自己创建一个身份标识，作为client
+         */
         final ClientIdentity clientIdentity = new ClientIdentity(destination, (short) 1001, "");
         while (running && destinationRunning.get()) {
             try {
+                /**
+                 * note:
+                 * 2.根据destination获取对应instance，如果没有就sleep，等待产生（比如从别的server那边HA过来一个instance）
+                 */
                 CanalInstance canalInstance = canalServer.getCanalInstances().get(destination);
                 if (canalInstance == null) {
                     try {
@@ -153,6 +172,10 @@ public class CanalMQStarter {
                     }
                     continue;
                 }
+                /**
+                 * note:
+                 * 3.构建一个MQ的destination对象,加载相关mq的配置信息，用作mqProducer的入参
+                 */
                 MQDestination canalDestination = new MQDestination();
                 canalDestination.setCanalDestination(destination);
                 CanalMQConfig mqConfig = canalInstance.getMqConfig();
@@ -162,13 +185,25 @@ public class CanalMQStarter {
                 canalDestination.setPartitionsNum(mqConfig.getPartitionsNum());
                 canalDestination.setPartitionHash(mqConfig.getPartitionHash());
 
+                /**
+                 * note:
+                 * 4.在embeddedCanal中注册这个订阅客户端
+                 */
                 canalServer.subscribe(clientIdentity);
                 logger.info("## the MQ producer: {} is running now ......", destination);
 
                 Integer getTimeout = mqProperties.getFetchTimeout();
                 Integer getBatchSize = mqProperties.getBatchSize();
+                /**
+                 * note:
+                 * 5.开始运行，并通过流式get/ack/rollback协议，进行数据消费
+                 */
                 while (running && destinationRunning.get()) {
                     Message message;
+                    /**
+                     * note:
+                     * 5.1 getWithoutAck获取message
+                     */
                     if (getTimeout != null && getTimeout > 0) {
                         message = canalServer
                             .getWithoutAck(clientIdentity, getBatchSize, getTimeout.longValue(), TimeUnit.MILLISECONDS);
@@ -180,6 +215,11 @@ public class CanalMQStarter {
                     try {
                         int size = message.isRaw() ? message.getRawEntries().size() : message.getEntries().size();
                         if (batchId != -1 && size != 0) {
+                            /**
+                             * note:
+                             * 5.2 通过mqProducer，将message投递到mq集群，投递成功后用回调commit进行acK,
+                             * 失败的话就用回调rollback进行rollback
+                             */
                             canalMQProducer.send(canalDestination, message, new Callback() {
 
                                 @Override

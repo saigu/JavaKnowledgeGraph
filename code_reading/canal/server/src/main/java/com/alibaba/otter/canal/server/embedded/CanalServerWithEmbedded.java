@@ -51,6 +51,10 @@ import com.google.protobuf.ByteString;
 public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements CanalServer, CanalService {
 
     private static final Logger        logger  = LoggerFactory.getLogger(CanalServerWithEmbedded.class);
+    /**
+     * note:
+     * 这里维护了具体的instance,key为destination
+     */
     private Map<String, CanalInstance> canalInstances;
     // private Map<ClientIdentity, Position> lastRollbackPostions;
     private CanalInstanceGenerator     canalInstanceGenerator;
@@ -177,16 +181,30 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
     @Override
     public void subscribe(ClientIdentity clientIdentity) throws CanalServerException {
         checkStart(clientIdentity.getDestination());
-
+        /**
+         * note:
+         * 1.根据客户端标识clientIdentity中的destination，找到对应的instance
+         */
         CanalInstance canalInstance = canalInstances.get(clientIdentity.getDestination());
         if (!canalInstance.getMetaManager().isStart()) {
             canalInstance.getMetaManager().start();
         }
-
+        /**
+         * note:
+         * 2.通过instance的metaManager记录下当前这个客户端在订阅
+         */
         canalInstance.getMetaManager().subscribe(clientIdentity); // 执行一下meta订阅
 
+        /**
+         * note:
+         * 3.通过instace的metaManage获取当前订阅binlog的position位置
+         */
         Position position = canalInstance.getMetaManager().getCursor(clientIdentity);
         if (position == null) {
+            /**
+             * note:
+             * 3.1 如果第一次订阅，，就从instance的eventStore获取第一条positon位置，作为客户端订阅的开始
+             */
             position = canalInstance.getEventStore().getFirstPosition();// 获取一下store中的第一条
             if (position != null) {
                 canalInstance.getMetaManager().updateCursor(clientIdentity, position); // 更新一下cursor
@@ -225,6 +243,11 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
      * <pre>
      * 注意： meta获取和数据的获取需要保证顺序性，优先拿到meta的，一定也会是优先拿到数据，所以需要加同步. (不能出现先拿到meta，拿到第二批数据，这样就会导致数据顺序性出现问题)
      * </pre>
+     *
+     * note:
+     * 流程与getWithoutAck基本一致。
+     * 主要区别在于，客户端获取batch后，自动ack，这样相对来说肯定更快，但是无法保证可靠性。
+     * 在项目中看起来暂时没有使用
      */
     @Override
     public Message get(ClientIdentity clientIdentity, int batchSize) throws CanalServerException {
@@ -253,7 +276,6 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
         synchronized (canalInstance) {
             // 获取到流式数据中的最后一批获取的位置
             PositionRange<LogPosition> positionRanges = canalInstance.getMetaManager().getLastestBatch(clientIdentity);
-
             if (positionRanges != null) {
                 throw new CanalServerException(String.format("clientId:%s has last batch:[%s] isn't ack , maybe loss data",
                     clientIdentity.getClientId(),
@@ -263,7 +285,6 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
             Events<Event> events = null;
             Position start = canalInstance.getMetaManager().getCursor(clientIdentity);
             events = getEvents(canalInstance.getEventStore(), start, batchSize, timeout, unit);
-
             if (CollectionUtils.isEmpty(events.getEvents())) {
                 logger.debug("get successfully, clientId:{} batchSize:{} but result is null",
                     clientIdentity.getClientId(),
@@ -297,7 +318,7 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
                         batchId,
                         events.getPositionRange());
                 }
-                // 直接提交ack
+                // 直接提交ack！！
                 ack(clientIdentity, batchId);
                 return new Message(batchId, raw, entrys);
             }
@@ -337,32 +358,64 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
         checkStart(clientIdentity.getDestination());
         checkSubscribe(clientIdentity);
 
+        /**
+         * note:
+         * 1.根据clientIdentity的destination获取对应的instance
+         */
         CanalInstance canalInstance = canalInstances.get(clientIdentity.getDestination());
         synchronized (canalInstance) {
             // 获取到流式数据中的最后一批获取的位置
             PositionRange<LogPosition> positionRanges = canalInstance.getMetaManager().getLastestBatch(clientIdentity);
 
+            /**
+             * note:
+             * 3.从cananlEventStore里面获取binlog，转化为event
+             */
             Events<Event> events = null;
             if (positionRanges != null) { // 存在流数据
+                /**
+                 * note:
+                 * 3.1 如果metaMagange还存在没有ack的位置信息，那就从当前位置继续获取event
+                 */
                 events = getEvents(canalInstance.getEventStore(), positionRanges.getStart(), batchSize, timeout, unit);
             } else {// ack后第一次获取
+                /**
+                 * note:
+                 * 3.2 如果metaManage没有多余的位置信息，那么就从cursor获取当前binlog的消费位点
+                 */
                 Position start = canalInstance.getMetaManager().getCursor(clientIdentity);
                 if (start == null) { // 第一次，还没有过ack记录，则获取当前store中的第一条
                     start = canalInstance.getEventStore().getFirstPosition();
                 }
+                /**
+                 * note:
+                 * 4.根据当前binlog的消费位点，获取到对应的event(binlog信息)
+                 */
 
                 events = getEvents(canalInstance.getEventStore(), start, batchSize, timeout, unit);
             }
 
+            /**
+             * note:
+             * 5.event转化为entry返回消息，并生成新的batchId，组合成message返回给客户端
+             */
             if (CollectionUtils.isEmpty(events.getEvents())) {
                 // logger.debug("getWithoutAck successfully, clientId:{}
                 // batchSize:{} but result
                 // is null",
                 // clientIdentity.getClientId(),
                 // batchSize);
+                /**
+                 * note:
+                 * 5.1 如果获取的events为空，就把batchId设置为-1返回客户端
+                 */
                 return new Message(-1, true, new ArrayList()); // 返回空包，避免生成batchId，浪费性能
             } else {
                 // 记录到流式信息
+                /**
+                 * note:
+                 * 5.2 如果获取的events不为空，就构建新的batchId、把events转为entry返回客户端
+                 */
                 Long batchId = canalInstance.getMetaManager().addBatch(clientIdentity, events.getPositionRange());
                 boolean raw = isRaw(canalInstance.getEventStore());
                 List entrys = null;
@@ -423,6 +476,10 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
 
         CanalInstance canalInstance = canalInstances.get(clientIdentity.getDestination());
         PositionRange<LogPosition> positionRanges = null;
+        /**
+         * note:
+         * 1.从metaManager中移除batchId对应的记录
+         */
         positionRanges = canalInstance.getMetaManager().removeBatch(clientIdentity, batchId); // 更新位置
         if (positionRanges == null) { // 说明是重复的ack/rollback
             throw new CanalServerException(String.format("ack error , clientId:%s batchId:%d is not exist , please check",
@@ -448,6 +505,10 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
         // }
 
         // 更新cursor
+        /**
+         * note:
+         * 2.记录已经成功消费到的binlog位置，以便下一次获取的时候可以从这个位置开始
+         */
         if (positionRanges.getAck() != null) {
             canalInstance.getMetaManager().updateCursor(clientIdentity, positionRanges.getAck());
             if (logger.isInfoEnabled()) {
@@ -459,6 +520,10 @@ public class CanalServerWithEmbedded extends AbstractCanalLifeCycle implements C
         }
 
         // 可定时清理数据
+        /**
+         * note:
+         * 3.已经ack的数据，可以在eventStore中清除了
+         */
         canalInstance.getEventStore().ack(positionRanges.getEnd(), positionRanges.getEndSeq());
     }
 
