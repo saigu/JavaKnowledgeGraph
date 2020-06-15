@@ -30,7 +30,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
-                <version>5.0.5.RELEASE</version>
+                <version>5.0.11.RELEASE</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
