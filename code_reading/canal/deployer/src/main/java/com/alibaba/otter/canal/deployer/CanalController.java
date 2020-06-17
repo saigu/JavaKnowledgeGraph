@@ -399,6 +399,11 @@ public class CanalController {
             globalConfig.setSpringXml(springXml);
         }
 
+        /**
+         * note：
+         * 匿名内部类直接构造一个generator代理
+         * 然后根据canal.instance.global.mode选择PlainCanalInstanceGenerator还是SpringCanalInstanceGenerator
+         */
         instanceGenerator = new CanalInstanceGenerator() {
 
             public CanalInstance generate(String destination) {

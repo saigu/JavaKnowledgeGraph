@@ -16,16 +16,45 @@ import com.alibaba.otter.canal.store.CanalEventStore;
  */
 public interface CanalInstance extends CanalLifeCycle {
 
+    /**
+     * note:
+     * instance对应的destination
+     * @return
+     */
     String getDestination();
 
+    /**
+     * note:
+     * 数据源接入，模拟slave协议和master进行交互，协议解析，位于canal.parse模块中
+     * @return
+     */
     CanalEventParser getEventParser();
 
+    /**
+     * note:
+     * Parser和Store链接器，进行数据过滤，加工，分发的工作
+     * @return
+     */
     CanalEventSink getEventSink();
 
+    /**
+     * note:
+     * 数据存储
+     * @return
+     */
     CanalEventStore getEventStore();
 
+    /**
+     * note:
+     * 增量订阅 & 消费信息管理器
+     * @return
+     */
     CanalMetaManager getMetaManager();
 
+    /**
+     * 告警，位于canal.common块中
+     * @return
+     */
     CanalAlarmHandler getAlarmHandler();
 
     /**
@@ -33,5 +62,10 @@ public interface CanalInstance extends CanalLifeCycle {
      */
     boolean subscribeChange(ClientIdentity identity);
 
+    /**
+     * note:
+     * 相关mq的配置信息，用作mqProducer的入参
+     * @return
+     */
     CanalMQConfig getMqConfig();
 }

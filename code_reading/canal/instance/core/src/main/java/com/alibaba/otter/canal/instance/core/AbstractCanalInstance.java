@@ -41,7 +41,11 @@ public class AbstractCanalInstance extends AbstractCanalLifeCycle implements Can
     protected CanalMQConfig                          mqConfig;                                                     // mq的配置
 
 
-
+    /**
+     * 如果订阅关系发生变化，就做一些操作，这里看的话，主要就是更新了一下filter
+     * @param identity
+     * @return
+     */
     @Override
     public boolean subscribeChange(ClientIdentity identity) {
         if (StringUtils.isNotEmpty(identity.getFilter())) {
