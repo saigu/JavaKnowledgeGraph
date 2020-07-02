@@ -422,6 +422,22 @@ public class MysqlEventParser extends AbstractMysqlEventParser implements CanalE
         }
     }
 
+    /**
+     * note:
+     * 1.logPositionManager找历史记录
+     * 2.如果没有找到
+     *  2.1 如果instance没有配置canal.instance.master.journal.name
+     *      2.1.1 如果instance配置了canal.instance.master.timestamp,就按照时间戳查找
+     *      2.1.2 如果没有配置timestamp，就返回数据库最新的位点
+     *  2.2 如果instance配置了canal.instance.master.journal.name
+     *      2.2.1 如果instance配置了canal.instance.master.position，那就根据journalName和position获取位点信息
+     *      2.2.2 如果配置了timestamp，就用journalName + timestamp形式获取位点信息
+     * 3.如果找到了历史记录
+     *  3.1如果历史记录的连接信息和当前连接信息一致，那么判断下是否有异常，没有异常就直接返回
+     *  3.2如果历史记录的连接信息和当前连接信息不一致，说明可能发生主备切换，就把历史记录的时间戳回退一分钟，重新查询
+     * @param connection
+     * @return
+     */
     protected EntryPosition findStartPositionInternal(ErosaConnection connection) {
         MysqlConnection mysqlConnection = (MysqlConnection) connection;
         LogPosition logPosition = logPositionManager.getLatestIndexBy(destination);

@@ -58,18 +58,21 @@ public class CanalStarter {
     /**
      * 启动方法
      * note:
-     * 1.启动CanalMQProducer
+     * 1.根据配置的serverMode，决定使用CanalMQProducer或者canalWithNetty
      * 2.启动CanalController
      * 3.注册shutdownHook
-     * 4.启动canalMQStarter
-     * 5.监听canalAdmin
+     * 4.启动canalMQStarter（内部使用CanalMQProducer将消息投递给mq）
+     * 5.启动canalAdmin（注意这个不是admin控制台）
      *
      * @throws Throwable
      */
     public synchronized void start() throws Throwable {
         String serverMode = CanalController.getProperty(properties, CanalConstants.CANAL_SERVER_MODE);
-        //note 1.如果canal.serverMode不是tcp，SPI加载CanalMQProducer,并且启动CanalMQProducer
-        //（回头可以深入研究下ExtensionLoader类的相关实现）
+        /**
+         * note
+         * 1.如果canal.serverMode不是tcp，加载CanalMQProducer,并且启动CanalMQProducer
+         * 回头可以深入研究下ExtensionLoader类的相关实现
+         */
         if (!"tcp".equalsIgnoreCase(serverMode)) {
             ExtensionLoader<CanalMQProducer> loader = ExtensionLoader.getExtensionLoader(CanalMQProducer.class);
             canalMQProducer = loader

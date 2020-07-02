@@ -156,6 +156,15 @@ public class MysqlConnection implements ErosaConnection {
         }
     }
 
+    /**
+     * note:
+     * 把自身伪装成slave注册到数据库
+     * 然后用fetcher不断抓取变更event，通过sink方法投递到store
+     * @param binlogfilename
+     * @param binlogPosition
+     * @param func
+     * @throws IOException
+     */
     public void dump(String binlogfilename, Long binlogPosition, SinkFunction func) throws IOException {
         updateSettings();
         loadBinlogChecksum();
@@ -221,6 +230,15 @@ public class MysqlConnection implements ErosaConnection {
         throw new NullPointerException("Not implement yet");
     }
 
+    /**
+     * note:
+     * 把自身伪装成slave注册到数据库
+     * 然后用fetcher不断抓取变更event，然后写入到coprocessor进行并行处理
+     * @param binlogfilename
+     * @param binlogPosition
+     * @param coprocessor
+     * @throws IOException
+     */
     @Override
     public void dump(String binlogfilename, Long binlogPosition, MultiStageCoprocessor coprocessor) throws IOException {
         updateSettings();

@@ -73,7 +73,18 @@ public class CanalController {
         this(System.getProperties());
     }
 
+    /**
+     * note:
+     * 1.构建PlainCanalConfigClient，用户远程获取配置
+     * 2.初始化全局配置，顺便把instance相关的全局配置初始化一下
+     * 3.准备一下canal-server，核心在于embededCanalServer，如果有需要canalServerWithNetty，那就多包装一个（我们serverMode=mq是不需要这个netty的）
+     * 4.初始化zkClient
+     * 5.初始化ServerRunningMonitors，作为instance 运行节点控制
+     * 6.初始化monitor机制,监控instance配置变化
+     * @param properties
+     */
     public CanalController(final Properties properties){
+        //note:1.构建PlainCanalConfigClient，用户远程获取配置（这个MigrateMap可能纯粹为了懒加载吧）
         managerClients = MigrateMap.makeComputingMap(new Function<String, PlainCanalConfigClient>() {
 
             public PlainCanalConfigClient apply(String managerAddress) {
@@ -103,7 +114,9 @@ public class CanalController {
             System.setProperty(CanalConstants.CANAL_ALIYUN_SECRETKEY, secretkey);
         }
 
-        // 准备canal server
+        // 3.准备canal server
+        //note: 核心在于embededCanalServer，如果有需要canalServerWithNetty，那就多包装一个（我们serverMode=mq
+        // 是不需要这个netty的）
         ip = getProperty(properties, CanalConstants.CANAL_IP);
         registerIp = getProperty(properties, CanalConstants.CANAL_REGISTER_IP);
         port = Integer.valueOf(getProperty(properties, CanalConstants.CANAL_PORT, "11111"));
@@ -137,6 +150,7 @@ public class CanalController {
         if (StringUtils.isEmpty(registerIp)) {
             registerIp = ip; // 兼容以前配置
         }
+        //note:4.初始化zkClient
         final String zkServers = getProperty(properties, CanalConstants.CANAL_ZKSERVERS);
         if (StringUtils.isNotEmpty(zkServers)) {
             zkclientx = ZkClientx.getZkClient(zkServers);
@@ -147,8 +161,8 @@ public class CanalController {
 
         final ServerRunningData serverData = new ServerRunningData(registerIp + ":" + port);
         ServerRunningMonitors.setServerData(serverData);
-        //note: MigrateMap.makeComputingMap的使用
-        //当map.get为null时，会调用apply方法,类似guava cache的load操作
+        //note: 5.初始化ServerRunningMonitors，作为instance 运行节点控制
+        // MigrateMap.makeComputingMap的使用，当map.get为null时，会调用apply方法,类似guava cache的load操作
         ServerRunningMonitors.setRunningMonitors(MigrateMap.makeComputingMap(new Function<String, ServerRunningMonitor>() {
 
             public ServerRunningMonitor apply(final String destination) {
@@ -254,7 +268,7 @@ public class CanalController {
             }
         }));
 
-        // 初始化monitor机制
+        // note: 6.初始化monitor机制,监控instance配置变化
         autoScan = BooleanUtils.toBoolean(getProperty(properties, CanalConstants.CANAL_AUTO_SCAN));
         if (autoScan) {
             defaultAction = new InstanceAction() {

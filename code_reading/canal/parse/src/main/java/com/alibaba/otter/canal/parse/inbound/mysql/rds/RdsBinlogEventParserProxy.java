@@ -50,7 +50,7 @@ public class RdsBinlogEventParserProxy extends MysqlEventParser {
             setRdsOssMode(true);
             final ParserExceptionHandler targetHandler = this.getParserExceptionHandler();
             if (directory == null) {
-                directory = System.getProperty("java.io.tmpdir", "/tmp") + "/" + destination;
+                directory = "/tmp" + "/" + destination;
             }
             rdsLocalBinlogEventParser.setLogPositionManager(this.getLogPositionManager());
             rdsLocalBinlogEventParser.setDestination(destination);

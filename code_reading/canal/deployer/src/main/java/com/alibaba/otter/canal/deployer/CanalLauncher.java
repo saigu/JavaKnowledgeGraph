@@ -34,21 +34,25 @@ public class CanalLauncher {
     /**
      * note:
      * 1.加载canal.properties的配置内容
-     * 2.根据canal.admin.manager判断是否是admin控制,如果不是admin控制，就直接根据canal.properties的配置来了
-     * 3.如果是admin控制，就新开一个单一线程池每隔五秒用http请求去admin上拉配置进行merge（这里依赖了instance模块的相关配置拉取的工具方法）
-     * 4.核心是用canalStarter.start()启动（这里又开了多线程）
-     * 5.使用CountDownLatch保持主线程存活
-     * 6.收到关闭信号，CDL-1,然后关闭配置更新线程池，优雅退出
+     * 2.根据canal.admin.manager是否为空判断是否是admin控制,如果不是admin控制，就直接根据canal.properties的配置来了
+     *  2.1 如果是admin控制，使用PlainCanalConfigClient获取远程配置
+     *  2.2 新开一个线程池每隔五秒用http请求去admin上拉配置进行merge（这里依赖了instance模块的相关配置拉取的工具方法）
+     *  2.3 用md5进行校验，如果canal-server配置有更新，那么就重启canal-server
+     * 3.核心是用canalStarter.start()启动（这里又开了多线程）
+     * 4.使用CountDownLatch保持主线程存活
+     * 5.收到关闭信号，CDL-1,然后关闭配置更新线程池，优雅退出
      * @param args
      */
     public static void main(String[] args) {
         try {
             logger.info("## set default uncaught exception handler");
+            //note:设置全局未捕获异常的处理
             setGlobalUncaughtExceptionHandler();
 
             logger.info("## load canal configurations");
             /**
              * note:
+             * 1.读取canal.properties的配置
              * 可以手动指定配置路径名称
              */
             String conf = System.getProperty("canal.conf", "classpath:canal.properties");
@@ -67,6 +71,10 @@ public class CanalLauncher {
 
             final CanalStarter canalStater = new CanalStarter(properties);
             String managerAddress = CanalController.getProperty(properties, CanalConstants.CANAL_ADMIN_MANAGER);
+            /**
+             * note:
+             * 2.根据canal.admin.manager是否为空判断是否是admin控制,如果不是admin控制，就直接根据canal.properties的配置来了
+             */
             if (StringUtils.isNotEmpty(managerAddress)) {
                 String user = CanalController.getProperty(properties, CanalConstants.CANAL_ADMIN_USER);
                 String passwd = CanalController.getProperty(properties, CanalConstants.CANAL_ADMIN_PASSWD);
@@ -78,6 +86,10 @@ public class CanalLauncher {
                 if (StringUtils.isEmpty(registerIp)) {
                     registerIp = AddressUtils.getHostIp();
                 }
+                /**
+                 * note：
+                 * 2.1使用PlainCanalConfigClient获取远程配置
+                 */
                 final PlainCanalConfigClient configClient = new PlainCanalConfigClient(managerAddress,
                         user,
                         passwd,
@@ -97,6 +109,10 @@ public class CanalLauncher {
                 int scanIntervalInSecond = Integer.valueOf(CanalController.getProperty(managerProperties,
                         CanalConstants.CANAL_AUTO_SCAN_INTERVAL,
                         "5"));
+                /**
+                 * note：
+                 * 2.2 新开一个线程池每隔五秒用http请求去admin上拉配置进行merge（这里依赖了instance模块的相关配置拉取的工具方法）
+                 */
                 executor.scheduleWithFixedDelay(new Runnable() {
 
                     private PlainCanal lastCanalConfig;
@@ -107,6 +123,10 @@ public class CanalLauncher {
                                 lastCanalConfig = configClient.findServer(null);
                             } else {
                                 PlainCanal newCanalConfig = configClient.findServer(lastCanalConfig.getMd5());
+                                /**
+                                 * note:
+                                 * 2.3 用md5进行校验，如果canal-server配置有更新，那么就重启canal-server
+                                 */
                                 if (newCanalConfig != null) {
                                     // 远程配置canal.properties修改重新加载整个应用
                                     canalStater.stop();
