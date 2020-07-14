@@ -584,7 +584,9 @@ public class CanalController {
         }
 
         if (autoScan) {
+            //note：启动线程定时去扫描配置
             instanceConfigMonitors.get(globalInstanceConfig.getMode()).start();
+            //note:这部分代码似乎没有用，目前只能是manager或者spring两种方式二选一
             for (InstanceConfigMonitor monitor : instanceConfigMonitors.values()) {
                 if (!monitor.isStart()) {
                     monitor.start();

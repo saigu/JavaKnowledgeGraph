@@ -164,6 +164,13 @@ public class ServerRunningMonitor extends AbstractCanalLifeCycle {
         processStop();
     }
 
+    /**
+     * note:
+     * 1.还是一样构建一个临时节点的路径：/otter/canal/destinations/{0}/running
+     * 2.尝试创建临时节点。
+     *  2.1 如果节点已经存在，说明是其他的canal server已经启动了这个canal instance。此时会抛出ZkNodeExistsException，进入catch代码块。
+     *  2.2 如果创建成功，就说明没有其他server启动这个instance，可以创建
+     */
     private void initRunning() {
         if (!isStart()) {
             return;
