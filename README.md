@@ -45,6 +45,11 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
     - 数据订阅与实时同步
       - [实时数据订阅与分发系统概述](https://mp.weixin.qq.com/s/vJKGfBeKtKJ7pH6S7b4Klw)
       - [[从零单排canal 01] canal 10分钟入门（基于1.1.4版本）](https://mp.weixin.qq.com/s/caEi8hrpuFFBDJyj2dXmow)
+      - [[从零单排canal 02] canal 集群版+admin控制台 最新搭建姿势（基于1.1.4版本）](https://mp.weixin.qq.com/s/DI2usZ3DZHN2XqRZ6DHYtw)
+      - [[从零单排canal 03] canal源码分析大纲）](https://mp.weixin.qq.com/s/sdm_IDp8g-J0pZ_t3tkKjA)
+      - [[从零单排canal 04] 启动模块deployer源码解析](https://mp.weixin.qq.com/s/QF4TGoh9y_HkZEMS5aUXZQ)
+      - [[从零单排canal 05] server模块源码解析](https://mp.weixin.qq.com/s/nzguM-3JUjdLoVbp9H5FGA)
+
 - 工作总结
   - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
   - [关于校招面试要怎么准备，这里有一些过来人的建议](https://mp.weixin.qq.com/s/JF936aSUR40dycHjujDWWQ)
