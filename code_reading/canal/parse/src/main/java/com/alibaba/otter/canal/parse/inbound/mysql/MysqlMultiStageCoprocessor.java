@@ -85,15 +85,23 @@ public class MysqlMultiStageCoprocessor extends AbstractCanalLifeCycle implement
     public void start() {
         super.start();
         this.exception = null;
+        /*
+         * createSingleProducer创建一个单生产者的RingBuffer，
+         * 第一个参数叫EventFactory，从名字上理解就是"事件工厂"，其实它的职责就是产生数据填充RingBuffer的区块。
+         * 第二个参数是RingBuffer的大小，它必须是2的指数倍 目的是为了将求模运算转为&运算提高效率
+         * 第三个参数是RingBuffer的生产都在没有可用区块的时候(可能是消费者（或者说是事件处理器） 太慢了)的等待策略
+         */
         this.disruptorMsgBuffer = RingBuffer.createSingleProducer(new MessageEventFactory(),
             ringBufferSize,
             new BlockingWaitStrategy());
         int tc = parserThreadCount > 0 ? parserThreadCount : 1;
+        //两个线程池
         this.parserExecutor = Executors.newFixedThreadPool(tc, new NamedThreadFactory("MultiStageCoprocessor-Parser-"
                                                                                       + destination));
 
         this.stageExecutor = Executors.newFixedThreadPool(2, new NamedThreadFactory("MultiStageCoprocessor-other-"
                                                                                     + destination));
+        //序号栅栏，管理和协调生产者的游标序号和各个消费者的序号，确保生产者不会覆盖消费者未来得及处理的消息，确保存在依赖的消费者之间能够按照正确的顺序处理
         SequenceBarrier sequenceBarrier = disruptorMsgBuffer.newBarrier();
         ExceptionHandler exceptionHandler = new SimpleFatalExceptionHandler();
         // stage 2

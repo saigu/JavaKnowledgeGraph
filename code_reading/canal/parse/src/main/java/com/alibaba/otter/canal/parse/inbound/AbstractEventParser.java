@@ -186,8 +186,8 @@ public abstract class AbstractEventParser<EVENT> extends AbstractCanalLifeCycle 
      *  3.3 执行dump前的准备工作,查看数据库的binlog_format和binlog_row_image，准备一下DatabaseTableMeta
      *  3.4 findStartPosition获取最后的位置信息（挺重要的，具体实现在MysqlEventParser）
      *  3.5 构建一个sinkHandler，实现具体的sink逻辑
-     *  3.6 默认是parallel处理的，需要构建一个MultiStageCoprocessor；如果不是parallel，就直接用sinkHandler处理。
-     *  3.7 开始dump，内部while不断循环，根据是否parallel，选择MultiStageCoprocessor或者sinkHandler进行投递。
+     *  3.6 开始dump，默认是parallel处理的，需要构建一个MultiStageCoprocessor；如果不是parallel，就直接用sinkHandler处理。
+     *      内部while不断循环，根据是否parallel，选择MultiStageCoprocessor或者sinkHandler进行投递。
      * 4.如果有异常抛出，那么根据异常类型做相关处理，然后退出sink消费，释放一下状态，sleep一段时间后重新开始
      *
      */
@@ -210,13 +210,14 @@ public abstract class AbstractEventParser<EVENT> extends AbstractCanalLifeCycle 
                 while (running) {
                     try {
                         // 开始执行replication
-                        // 1. 构造Erosa连接
+                        // 3.1 构造Erosa连接
                         erosaConnection = buildErosaConnection();
 
-                        // 2. 启动一个心跳线程
+                        // 3.2. 启动一个心跳线程
                         startHeartBeat(erosaConnection);
 
-                        // 3. 执行dump前的准备工作,查看数据库的binlog_format和binlog_row_image，准备一下DatabaseTableMeta
+                        // 3.3 执行dump前的准备工作,查看数据库的binlog_format和binlog_row_image
+                        // 准备一下DatabaseTableMeta
                         preDump(erosaConnection);
 
                         erosaConnection.connect();// 链接
@@ -225,7 +226,7 @@ public abstract class AbstractEventParser<EVENT> extends AbstractCanalLifeCycle 
                         if (queryServerId != 0) {
                             serverId = queryServerId;
                         }
-                        // 4. 获取最后的位置信息
+                        // 3.4 获取最后的位置信息
                         long start = System.currentTimeMillis();
                         logger.warn("---> begin to find start position, it will be long time for reset or first position");
 
@@ -246,7 +247,7 @@ public abstract class AbstractEventParser<EVENT> extends AbstractCanalLifeCycle 
                         // 重新链接，因为在找position过程中可能有状态，需要断开后重建
                         erosaConnection.reconnect();
 
-                        //3.6 构建一个sinkHandler
+                        //3.5 构建一个sinkHandler
                         final SinkFunction sinkHandler = new SinkFunction<EVENT>() {
 
                             private LogPosition lastPosition;
@@ -285,7 +286,7 @@ public abstract class AbstractEventParser<EVENT> extends AbstractCanalLifeCycle 
 
                         };
 
-                        // 4. 开始dump数据
+                        // 3.6 开始dump数据
                         if (parallel) {
                             // build stage processor
                             multiStageCoprocessor = buildMultiStageCoprocessor();

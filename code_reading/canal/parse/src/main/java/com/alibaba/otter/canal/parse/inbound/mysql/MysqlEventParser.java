@@ -440,6 +440,7 @@ public class MysqlEventParser extends AbstractMysqlEventParser implements CanalE
      */
     protected EntryPosition findStartPositionInternal(ErosaConnection connection) {
         MysqlConnection mysqlConnection = (MysqlConnection) connection;
+        //1.logPositionManager找历史记录
         LogPosition logPosition = logPositionManager.getLatestIndexBy(destination);
         if (logPosition == null) {// 找不到历史成功记录
             EntryPosition entryPosition = null;
