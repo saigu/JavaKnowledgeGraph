@@ -49,6 +49,10 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排canal 03] canal源码分析大纲）](https://mp.weixin.qq.com/s/sdm_IDp8g-J0pZ_t3tkKjA)
       - [[从零单排canal 04] 启动模块deployer源码解析](https://mp.weixin.qq.com/s/QF4TGoh9y_HkZEMS5aUXZQ)
       - [[从零单排canal 05] server模块源码解析](https://mp.weixin.qq.com/s/nzguM-3JUjdLoVbp9H5FGA)
+      - [[从零单排canal 06] instance模块源码解析](https://mp.weixin.qq.com/s/63lHeHVuo7V6cr6kqigjog)
+      - [[从零单排canal 07] parser模块源码解析](https://mp.weixin.qq.com/s/gRpw-7aDfei_HAnVeR0cyA)
+      - [基于canal的client-adapter数据同步必读指南](https://mp.weixin.qq.com/s/UBWh6dHNc0GV-NiQb51dCg)
+
 
 - 工作总结
   - [你在开发中有用过什么设计模式吗？](https://mp.weixin.qq.com/s/s-WBAvtozwPNVaY0lB9y1w)
