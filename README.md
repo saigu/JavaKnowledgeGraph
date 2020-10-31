@@ -13,6 +13,10 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
 ![Java知识图谱](https://s2.ax1x.com/2020/02/29/3yQUXt.png)
 
 # 目录
+- Java
+   - Java实战
+     - [线上问题排查，一不小心踩到阿里的 arthas坑了](https://mp.weixin.qq.com/s/T6rbRDWb8l-K0QZAM3meqw)
+     - [用ThreadLocal来优化下代码吧](https://mp.weixin.qq.com/s/An-bXM7ihSEhRKL6r2-T-A)
 - 数据存储
    - MySQL
      - [聊一聊关于MySQL的count(*)](https://mp.weixin.qq.com/s/tBKqfxwBYjnUXSflWpeHJg) 
