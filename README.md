@@ -26,6 +26,7 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
      - [MySQL数据库无完整备份删库，除了跑路还能怎么办？](https://mp.weixin.qq.com/s/CSXdyD9uPbxwULvyTvHwsw)
      - [MySQL事务隔离性，从基本概念深入到实现](https://mp.weixin.qq.com/s/BeKkL2VZTDJsE3JARrht2A)
      - [MySQL事务原子性、一致性、持久性的实现](https://mp.weixin.qq.com/s/NeGQDj-DjMJJMEoqfJzEpg)
+     - [使用过mysql的binlog吗？看看如何用binlog排查阿里开源项目otter的问题](https://mp.weixin.qq.com/s/4qZ3_9RnxYVQeqJN0sSbtA)
       - 学习书目：《高性能MySQL》、《MySQL技术内幕 InnoDB存储引擎》、丁奇《MySQL实战45讲》
 
     - HBase
@@ -46,6 +47,8 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
 
 - 项目实战
+    - 项目复盘
+      - [亿级大表分库分表实战总结（万字干货，实战复盘）](https://mp.weixin.qq.com/s/4xOVb23kYCG5VyXJImXV8w)
     - 数据订阅与实时同步
       - [实时数据订阅与分发系统概述](https://mp.weixin.qq.com/s/vJKGfBeKtKJ7pH6S7b4Klw)
       - [[从零单排canal 01] canal 10分钟入门（基于1.1.4版本）](https://mp.weixin.qq.com/s/caEi8hrpuFFBDJyj2dXmow)
