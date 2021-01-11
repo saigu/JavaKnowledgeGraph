@@ -43,12 +43,20 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排HBase 11]HBase二级索引解决方案](https://mp.weixin.qq.com/s/tF2OmKByzTn_D7gbBtkjJA)
       - [[从零单排HBase 12]HBase二级索引Phoenix使用与最佳实践](https://mp.weixin.qq.com/s/p50yj_YDyiNfbcVSWU-B7g)
       - [[从零单排HBase 13]使用phoenix踩的坑与设计思考](https://mp.weixin.qq.com/s/gMDi2XA1CroCb9oTkUdbWg)
-
       - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
+
+- 框架
+    - Netty
+      - [打算写一些Netty的文章了，先聊聊为什么要学习Netty](https://mp.weixin.qq.com/s/LZlUiyzKthsUy3QXuFPa1w)
+
+- 云原生
+    - k8s
+      - [拥抱云原生，如何将开源项目用k8s部署？](https://mp.weixin.qq.com/s/yj5dvdPRr4oGV88v2A9h8g)
 
 - 项目实战
     - 项目复盘
       - [亿级大表分库分表实战总结（万字干货，实战复盘）](https://mp.weixin.qq.com/s/4xOVb23kYCG5VyXJImXV8w)
+      - [2020实战复盘：如何从0到1搭建数据传输平台产品DTS？](https://mp.weixin.qq.com/s/2tjleImTrJF3UK9ypjNR6g)
     - 数据订阅与实时同步
       - [实时数据订阅与分发系统概述](https://mp.weixin.qq.com/s/vJKGfBeKtKJ7pH6S7b4Klw)
       - [[从零单排canal 01] canal 10分钟入门（基于1.1.4版本）](https://mp.weixin.qq.com/s/caEi8hrpuFFBDJyj2dXmow)
