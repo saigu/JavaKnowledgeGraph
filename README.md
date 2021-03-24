@@ -47,10 +47,10 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
 
 - 框架
     - Netty
-      - [打算写一些Netty的文章了，先聊聊为什么要学习Netty](https://mp.weixin.qq.com/s/LZlUiyzKthsUy3QXuFPa1w)
-      - [没搞清楚网络I/O模型？那怎么入门Netty](https://mp.weixin.qq.com/s/wJNSgtR3u6anh_TpJ0NhPA)
-      - [从网络I/O模型到Netty，先深入了解下I/O多路复用](https://mp.weixin.qq.com/s/XkhTJCvpyjA9vtA-kMaU0Q)
-      - [从I/O多路复用到Netty，还要跨过Java NIO包](https://mp.weixin.qq.com/s/dDFDlu7FMueO-6Pc_BUHPA)
+      - [1.打算写一些Netty的文章了，先聊聊为什么要学习Netty](https://mp.weixin.qq.com/s/LZlUiyzKthsUy3QXuFPa1w)
+      - [2.没搞清楚网络I/O模型？那怎么入门Netty](https://mp.weixin.qq.com/s/wJNSgtR3u6anh_TpJ0NhPA)
+      - [3.从网络I/O模型到Netty，先深入了解下I/O多路复用](https://mp.weixin.qq.com/s/XkhTJCvpyjA9vtA-kMaU0Q)
+      - [4.从I/O多路复用到Netty，还要跨过Java NIO包](https://mp.weixin.qq.com/s/dDFDlu7FMueO-6Pc_BUHPA)
       - 学习书目：《UNIX Network Programming(Volume1,3rd)》、《Linux高性能服务器编程》
 - 云原生
     - k8s
