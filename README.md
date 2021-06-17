@@ -51,7 +51,9 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [2.没搞清楚网络I/O模型？那怎么入门Netty](https://mp.weixin.qq.com/s/wJNSgtR3u6anh_TpJ0NhPA)
       - [3.从网络I/O模型到Netty，先深入了解下I/O多路复用](https://mp.weixin.qq.com/s/XkhTJCvpyjA9vtA-kMaU0Q)
       - [4.从I/O多路复用到Netty，还要跨过Java NIO包](https://mp.weixin.qq.com/s/dDFDlu7FMueO-6Pc_BUHPA)
-      - 学习书目：《UNIX Network Programming(Volume1,3rd)》、《Linux高性能服务器编程》
+      - [5.从一个Demo开始，揭开Netty的神秘面纱](https://mp.weixin.qq.com/s/7AxE5QMDnlR8gzilR8HajQ)
+      - [6.深入Netty逻辑架构，从Reactor线程模型开始](https://mp.weixin.qq.com/s/5VObfoJN0sO13oFhNjj8ig)
+      - 学习书目：《UNIX Network Programming(Volume1,3rd)》、《Linux高性能服务器编程》、《Netty in action》
 - 云原生
     - k8s
       - [拥抱云原生，如何将开源项目用k8s部署？](https://mp.weixin.qq.com/s/yj5dvdPRr4oGV88v2A9h8g)
