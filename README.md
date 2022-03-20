@@ -18,7 +18,6 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
      - [线上问题排查，一不小心踩到阿里的 arthas坑了](https://mp.weixin.qq.com/s/T6rbRDWb8l-K0QZAM3meqw)
      - [用ThreadLocal来优化下代码吧](https://mp.weixin.qq.com/s/An-bXM7ihSEhRKL6r2-T-A)
      - [记一次异步处理导致Jetty Request对象泄漏](https://mp.weixin.qq.com/s/j0-dBxDbDzoZuZp1Bnt9gQ)
-     - [硬吃一个P0故障，「在线业务」应该如何调优HBase参数？](https://mp.weixin.qq.com/s/nI2w3W44ZxlLDmvZPzq_jQ)
 - 数据存储
    - MySQL
      - [聊一聊关于MySQL的count(*)](https://mp.weixin.qq.com/s/tBKqfxwBYjnUXSflWpeHJg) 
@@ -45,6 +44,7 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排HBase 11]HBase二级索引解决方案](https://mp.weixin.qq.com/s/tF2OmKByzTn_D7gbBtkjJA)
       - [[从零单排HBase 12]HBase二级索引Phoenix使用与最佳实践](https://mp.weixin.qq.com/s/p50yj_YDyiNfbcVSWU-B7g)
       - [[从零单排HBase 13]使用phoenix踩的坑与设计思考](https://mp.weixin.qq.com/s/gMDi2XA1CroCb9oTkUdbWg)
+      - [硬吃一个P0故障，「在线业务」应该如何调优HBase参数？](https://mp.weixin.qq.com/s/nI2w3W44ZxlLDmvZPzq_jQ)
       - 学习书目：《HBase权威指南》、范欣欣《HBase原理与实践》
 
 - 框架
