@@ -18,6 +18,9 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
      - [线上问题排查，一不小心踩到阿里的 arthas坑了](https://mp.weixin.qq.com/s/T6rbRDWb8l-K0QZAM3meqw)
      - [用ThreadLocal来优化下代码吧](https://mp.weixin.qq.com/s/An-bXM7ihSEhRKL6r2-T-A)
      - [记一次异步处理导致Jetty Request对象泄漏](https://mp.weixin.qq.com/s/j0-dBxDbDzoZuZp1Bnt9gQ)
+     - [新写了一个中间件，开源啦](https://mp.weixin.qq.com/s/jS77FADjoTWxljaKc1X-sQ)
+     - [Java SPI 和 API，傻傻分不清？](https://mp.weixin.qq.com/s/LbBMzowcrN8wDuFLm3GGNw)
+     
 - 数据存储
    - MySQL
      - [聊一聊关于MySQL的count(*)](https://mp.weixin.qq.com/s/tBKqfxwBYjnUXSflWpeHJg) 
@@ -58,16 +61,7 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [7.Netty基础招式——ChannelHandler的最佳实践](https://mp.weixin.qq.com/s/ZvLQxcWBppm29KbUREm5TQ)
       - [8.Netty常用招式——ChannelHandler与编解码](https://mp.weixin.qq.com/s/0qTanI02VcbTDiKMzwnImA)
       - 学习书目：《UNIX Network Programming(Volume1,3rd)》、《Linux高性能服务器编程》、《Netty in action》
-- 云原生
-    - k8s
-      - [拥抱云原生，如何将开源项目用k8s部署？](https://mp.weixin.qq.com/s/yj5dvdPRr4oGV88v2A9h8g)
-    - ServiceMesh
-      - [1.到底谁才需要Service Mesh?](https://mp.weixin.qq.com/s/4mm6jxBvDGWVNr5YVkFNQA)
 
-- 项目实战
-    - 项目复盘
-      - [亿级大表分库分表实战总结（万字干货，实战复盘）](https://mp.weixin.qq.com/s/4xOVb23kYCG5VyXJImXV8w)
-      - [2020实战复盘：如何从0到1搭建数据传输平台产品DTS？](https://mp.weixin.qq.com/s/2tjleImTrJF3UK9ypjNR6g)
     - 数据订阅与实时同步
       - [实时数据订阅与分发系统概述](https://mp.weixin.qq.com/s/vJKGfBeKtKJ7pH6S7b4Klw)
       - [[从零单排canal 01] canal 10分钟入门（基于1.1.4版本）](https://mp.weixin.qq.com/s/caEi8hrpuFFBDJyj2dXmow)
@@ -78,6 +72,23 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
       - [[从零单排canal 06] instance模块源码解析](https://mp.weixin.qq.com/s/63lHeHVuo7V6cr6kqigjog)
       - [[从零单排canal 07] parser模块源码解析](https://mp.weixin.qq.com/s/gRpw-7aDfei_HAnVeR0cyA)
       - [基于canal的client-adapter数据同步必读指南](https://mp.weixin.qq.com/s/UBWh6dHNc0GV-NiQb51dCg)
+      - [爷青回，canal 1.1.6来了](https://mp.weixin.qq.com/s/q_wx_j1-N5W1VdTvlQg1zw)
+
+- 云原生
+    - k8s
+      - [拥抱云原生，如何将开源项目用k8s部署？](https://mp.weixin.qq.com/s/yj5dvdPRr4oGV88v2A9h8g)
+    - ServiceMesh
+      - [1.到底谁才需要Service Mesh?](https://mp.weixin.qq.com/s/4mm6jxBvDGWVNr5YVkFNQA)
+
+- 项目实战
+    - 项目复盘
+      - [亿级大表分库分表实战总结（万字干货，实战复盘）](https://mp.weixin.qq.com/s/4xOVb23kYCG5VyXJImXV8w)
+      - [2020实战复盘：如何从0到1搭建数据传输平台产品DTS？](https://mp.weixin.qq.com/s/2tjleImTrJF3UK9ypjNR6g)
+      - [实时数据订阅与分发系统概述](https://mp.weixin.qq.com/s/vJKGfBeKtKJ7pH6S7b4Klw)
+    
+
+- 架构师笔记
+  - [架构师之路，从「存储选型」起步](https://mp.weixin.qq.com/s/EwadeglZOjtVzPTk9YdT7w)
 
 
 - 工作总结
