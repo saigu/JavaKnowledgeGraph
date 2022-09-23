@@ -89,6 +89,10 @@ Java技术栈既广且深，我们需要打破不同知识点的壁垒，形成�
 
 - 架构师笔记
   - [架构师之路，从「存储选型」起步](https://mp.weixin.qq.com/s/EwadeglZOjtVzPTk9YdT7w)
+  - [架构师进阶，微服务设计与治理的16条常用原则](https://mp.weixin.qq.com/s/dwVPIaw56sfwmLB3NsuGWQ)
+  - [除了「加机器」，其实你的微服务还能这样优化](https://mp.weixin.qq.com/s/SpyMWn9n1Z9_YicPSdTWZg)
+  - [拆解一下消息队列、任务队列、任务调度系统](https://mp.weixin.qq.com/s/LfL_5XdJpalkfhRUDEodow)
+  
 
 
 - 工作总结
